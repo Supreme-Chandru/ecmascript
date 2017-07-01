@@ -1,12 +1,10 @@
 export default class DiffieHellman {
 
   constructor(p, g) {
-    if (p < 2 || g < 2 || p > 7919 || g > 7919) {
-      throw Error('Constructor arguments must be between 2 and 7920!');
+    if (!this.validateInitialArguments(p, g)) {
+      throw Error('Constructor arguments are out of range or non-prime!');
     }
-    if (!PRIMES.includes(p) && PRIMES.includes(g)) {
-      throw Error('Constructor requires prime numbers!');
-    }
+
     this.p = p;
     this.g = g;
   }
@@ -20,6 +18,16 @@ export default class DiffieHellman {
 
   getSharedSecret(ourPrivateKey, theirPublicKey) {
     return theirPublicKey ** ourPrivateKey % this.p;
+  }
+
+  validateInitialArguments(p, g){
+    const BIGGEST_PRIME = PRIMES[PRIMES.length - 1];
+    return p >= 2
+      && g >= 2
+      && p <= BIGGEST_PRIME
+      && g <= BIGGEST_PRIME
+      && PRIMES.includes(p)
+      && PRIMES.includes(g);
   }
 }
 
